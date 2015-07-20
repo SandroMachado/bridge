@@ -2,6 +2,7 @@ package com.afollestad.bridge;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +16,6 @@ import java.net.URLConnection;
  */
 class UriPipe extends Pipe {
 
-    private final static int BUFFER_SIZE = 1024 * 4;
-
     private final Context mContext;
     private final Uri mUri;
 
@@ -26,13 +25,13 @@ class UriPipe extends Pipe {
     }
 
     @Override
-    public void writeTo(OutputStream os) throws IOException {
+    public void writeTo(@NonNull OutputStream os) throws IOException {
         InputStream is = null;
         try {
             if (mUri.getScheme() == null || mUri.getScheme().equalsIgnoreCase("file"))
                 is = new FileInputStream(mUri.getPath());
             else is = mContext.getContentResolver().openInputStream(mUri);
-            byte[] buffer = new byte[BUFFER_SIZE];
+            byte[] buffer = new byte[Bridge.config().BUFFER_SIZE];
             int read;
             while ((read = is.read(buffer)) != -1)
                 os.write(buffer, 0, read);
@@ -42,6 +41,7 @@ class UriPipe extends Pipe {
     }
 
     @Override
+    @NonNull
     public String contentType() {
         String type;
         if (mUri.getScheme() == null || mUri.getScheme().equalsIgnoreCase("file")) {

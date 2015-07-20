@@ -295,17 +295,21 @@ try {
 on what `contentType()` in the `Pipe` implementation returns. If you want to override this header,
 you can change it in the `Pipe` or reset the header after setting the body.
 
-`Pipe` has two convenience methods that create a pre-designed `Pipe` instance:
+`Pipe` has three convenience methods that create a pre-designed `Pipe` instance:
 
 ```java
 Pipe uriPipe = Pipe.forUri(this, Uri.parse(
     "content://com.example.provider/documents/images/1"));
 
 Pipe filePipe = Pipe.forFile(new File("/sdcard/myfile.txt"));
+
+InputStream is = // ...
+Pipe transferPipe = Pipe.forStream(is, "text/plain");
 ```
 
 `forUri(Context, Uri)` will read from a File URI or content URI, so basically any file on an Android device can
 be read. `forFile(File)` indirectly uses `forUri(Context, Uri)` specifically for file:// URIs.
+`forStream(InputStream, String)` reads an `InputStream` and transfers the content into the Pipe.
 
 ------
 
@@ -509,6 +513,8 @@ Bridge.config().bufferSize(1024 * 10);
 ```
 
 Just remember to be careful with how much memory you consume, and test on various devices.
+
+**Note**: the buffer size is used in a few other places, such as pre-built `Pipe`'s (`Pipe#forUri`, `Pipe#forStream`, etc.).
 
 ------
 
