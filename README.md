@@ -43,6 +43,9 @@ dependencies {
     1. [Cancelling Individual Requests](https://github.com/afollestad/bridge#cancelling-individual-requests)
     2. [Cancelling Multiple Requests](https://github.com/afollestad/bridge#cancelling-multiple-requests)
 6. [Configuration](https://github.com/afollestad/bridge#configuration)
+    1. [Host](https://github.com/afollestad/bridge#host)
+    2. [Default Headers](https://github.com/afollestad/bridge#default-headers)
+    3. [Buffer Size](https://github.com/afollestad/bridge#buffer-size)
 7. [Cleanup](https://github.com/afollestad/bridge#cleanup)
 
 ------
@@ -467,7 +470,7 @@ You can set a host that is used as the base URL for every request.
 Bridge.config().host("http://www.google.com");
 ```
 
-With Google's homepage set as the host, this code would request *http://www.google.com/search?q=Hello*:
+With Google's homepage set as the host, this code would request `http://www.google.com/search?q=Hello`:
 
 ```
 Bridge.client()
