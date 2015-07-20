@@ -22,15 +22,21 @@ import java.net.HttpURLConnection;
  */
 public final class Response implements AsResults {
 
+    private final String mUrl;
     private final byte[] mData;
     private final int mCode;
     private final String mMessage;
     private Bitmap mBitmapCache;
 
-    protected Response(byte[] data, int code, String message) throws IOException {
+    protected Response(byte[] data, String url, int code, String message) throws IOException {
         mData = data;
+        mUrl = url;
         mCode = code;
         mMessage = message;
+    }
+
+    public String url() {
+        return mUrl;
     }
 
     public int code() {
@@ -101,6 +107,6 @@ public final class Response implements AsResults {
 
     @Override
     public String toString() {
-        return String.format("%d %s, %d bytes", mCode, mMessage, mData != null ? mData.length : 0);
+        return String.format("%s, %d %s, %d bytes", mUrl, mCode, mMessage, mData != null ? mData.length : 0);
     }
 }
