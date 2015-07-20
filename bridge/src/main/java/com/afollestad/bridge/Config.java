@@ -15,12 +15,13 @@ public final class Config {
         mDefaultHeaders = new HashMap<>();
         mDefaultHeaders.put("User-Agent", "afollestad/Bridge");
         mDefaultHeaders.put("Content-Type", "text/plain");
-        BUFFER_SIZE = 1024 * 4;
     }
 
     protected String mHost;
     protected Map<String, Object> mDefaultHeaders;
-    protected int BUFFER_SIZE;
+    protected int mConnectTimeout = 10000;
+    protected int mReadTimeout = 15000;
+    protected int mBufferSize = 1024 * 4;
 
     public Config host(@Nullable String host) {
         mHost = host;
@@ -34,10 +35,24 @@ public final class Config {
         return this;
     }
 
+    public Config connectTimeout(int timeout) {
+        if (timeout <= 0)
+            throw new IllegalArgumentException("Connect timeout must be greater than 0.");
+        mConnectTimeout = timeout;
+        return this;
+    }
+
+    public Config readTimeout(int timeout) {
+        if (timeout <= 0)
+            throw new IllegalArgumentException("Read timeout must be greater than 0.");
+        mReadTimeout = timeout;
+        return this;
+    }
+
     public Config bufferSize(int size) {
         if (size <= 0)
             throw new IllegalArgumentException("The buffer size must be greater than 0.");
-        BUFFER_SIZE = size;
+        mBufferSize = size;
         return this;
     }
 
@@ -45,6 +60,6 @@ public final class Config {
         mHost = null;
         mDefaultHeaders.clear();
         mDefaultHeaders = null;
-        BUFFER_SIZE = 0;
+        mBufferSize = 0;
     }
 }

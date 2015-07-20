@@ -31,7 +31,7 @@ class UriPipe extends Pipe {
             if (mUri.getScheme() == null || mUri.getScheme().equalsIgnoreCase("file"))
                 is = new FileInputStream(mUri.getPath());
             else is = mContext.getContentResolver().openInputStream(mUri);
-            byte[] buffer = new byte[Bridge.config().BUFFER_SIZE];
+            byte[] buffer = new byte[Bridge.client().config().mBufferSize];
             int read;
             while ((read = is.read(buffer)) != -1)
                 os.write(buffer, 0, read);

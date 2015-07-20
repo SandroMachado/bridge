@@ -17,7 +17,7 @@ Then, add Bridge to your dependencies list:
 
 ```gradle
 dependencies {
-    compile 'com.afollestad:bridge:1.1.0'
+    compile 'com.afollestad:bridge:1.1.1'
 }
 ```
 
@@ -45,7 +45,8 @@ dependencies {
 6. [Configuration](https://github.com/afollestad/bridge#configuration)
     1. [Host](https://github.com/afollestad/bridge#host)
     2. [Default Headers](https://github.com/afollestad/bridge#default-headers)
-    3. [Buffer Size](https://github.com/afollestad/bridge#buffer-size)
+    3. [Timeouts](https://github.com/afollestad/bridge#timeouts)
+    4. [Buffer Size](https://github.com/afollestad/bridge#buffer-size)
 7. [Cleanup](https://github.com/afollestad/bridge#cleanup)
 
 ------
@@ -471,15 +472,16 @@ Bridge allows you configure various functions globally.
 You can set a host that is used as the base URL for every request.
 
 ```java
-Bridge.config().host("http://www.google.com");
+Bridge.client().config()
+    .host("http://www.google.com");
 ```
 
 With Google's homepage set as the host, the code below would request `http://www.google.com/search?q=Hello`:
 
 ```java
 Bridge.client()
-        .get("/search?q=%s", "Hello")
-        .asString();
+    .get("/search?q=%s", "Hello")
+    .asString();
 ```
 
 Basically, the URL you pass with each request is appended to the end of the host. If you were to pass a full
@@ -491,7 +493,7 @@ Default headers are headers that are automatically applied to every request. You
 yourself with every request in your app.
 
 ```java
-Bridge.config()
+Bridge.client().config()
     .defaultHeader("User-Agent", "Bridge Sample Code")
     .defaultHeader("Content-Type", "application/json")
     .defaultHeader("Via", "My App");
@@ -499,6 +501,27 @@ Bridge.config()
 
 Every request, regardless of the method, will include those headers. You can override them at the
 individual request level by setting the header as you normally would.
+
+
+### Timeouts
+
+You can configure how long the library will wait until timing out, either for connections or reading:
+
+```java
+Bridge.client().config()
+    .connectTimeout(10000)
+    .readTimeout(15000);
+```
+
+You can set timeouts for individual requests too:
+
+```java
+Bridge.client()
+    .get("/bigVideo.mp4")
+    .connectTimeout(10000)
+    .readTimeout(15000)
+    .asString();
+```
 
 ### Buffer Size
 
@@ -509,10 +532,20 @@ byte array, which can affect memory usage, but it also increases the pace in whi
 The buffer size can easily be configured:
 
 ```java
-Bridge.config().bufferSize(1024 * 10);
+Bridge.client().config()
+    .bufferSize(1024 * 10);
 ```
 
 Just remember to be careful with how much memory you consume, and test on various devices.
+
+You can set the buffer size for individual requests too:
+
+```java
+Bridge.client()
+    .get("/bigVideo.mp4")
+    .bufferSize(1024 * 10)
+    .asString();
+```
 
 **Note**: the buffer size is used in a few other places, such as pre-built `Pipe`'s (`Pipe#forUri`, `Pipe#forStream`, etc.).
 

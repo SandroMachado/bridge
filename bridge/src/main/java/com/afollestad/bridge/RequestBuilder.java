@@ -24,18 +24,24 @@ public final class RequestBuilder implements AsResultsExceptions {
     protected Map<String, Object> mHeaders;
     protected byte[] mBody;
     protected Pipe mPipe;
-    protected int mConnectTimeout = 10000;
-    protected int mReadTimeout = 15000;
+    protected int mConnectTimeout;
+    protected int mReadTimeout;
+    protected int mBufferSize;
     private Request mRequest;
 
     protected RequestBuilder(String url, Method method, Bridge context) {
         mContext = context;
-        if (!url.startsWith("http") && Bridge.config().mHost != null)
-            url = Bridge.config().mHost + url;
+        if (!url.startsWith("http") && Bridge.client().config().mHost != null)
+            url = Bridge.client().config().mHost + url;
         Log.d(this, "%s %s", method.name(), url);
         mUrl = url;
         mMethod = method;
-        mHeaders = Bridge.config().mDefaultHeaders;
+
+        Config cf = Bridge.client().config();
+        mHeaders = cf.mDefaultHeaders;
+        mConnectTimeout = cf.mConnectTimeout;
+        mReadTimeout = cf.mReadTimeout;
+        mBufferSize = cf.mBufferSize;
     }
 
     public RequestBuilder header(@NonNull String name, @NonNull Object value) {
@@ -44,12 +50,23 @@ public final class RequestBuilder implements AsResultsExceptions {
     }
 
     public RequestBuilder connectTimeout(int timeout) {
+        if (timeout <= 0)
+            throw new IllegalArgumentException("Connect timeout must be greater than 0.");
         mConnectTimeout = timeout;
         return this;
     }
 
     public RequestBuilder readTimeout(int timeout) {
+        if (timeout <= 0)
+            throw new IllegalArgumentException("Read timeout must be greater than 0.");
         mReadTimeout = timeout;
+        return this;
+    }
+
+    public RequestBuilder bufferSize(int size) {
+        if (size <= 0)
+            throw new IllegalArgumentException("Buffer size must be greater than 0.");
+        mBufferSize = size;
         return this;
     }
 

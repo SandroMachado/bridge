@@ -85,7 +85,7 @@ public class Bridge {
     }
 
     @NonNull
-    public static Config config() {
+    public Config config() {
         if (mConfig == null)
             mConfig = new Config();
         return mConfig;
@@ -159,6 +159,7 @@ public class Bridge {
     public void destroy() {
         mHandler = null;
         mConfig.destroy();
+        mConfig = null;
         cancelAll();
         Log.d(this, "Bridge singleton was destroyed.");
     }

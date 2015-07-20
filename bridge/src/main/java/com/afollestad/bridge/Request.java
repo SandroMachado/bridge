@@ -66,7 +66,7 @@ public final class Request {
                 try {
                     is = conn.getInputStream();
                     bos = new ByteArrayOutputStream();
-                    byte[] buf = new byte[Bridge.config().BUFFER_SIZE];
+                    byte[] buf = new byte[Bridge.client().config().mBufferSize];
                     int read;
                     int totalRead = 0;
                     int totalAvailable;
