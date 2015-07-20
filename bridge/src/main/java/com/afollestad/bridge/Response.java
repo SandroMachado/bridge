@@ -73,7 +73,10 @@ public final class Response implements AsResults {
 
     @Override
     public Spanned asHtml() {
-        return Html.fromHtml(asString());
+        final String content = asString();
+        if (content == null)
+            return null;
+        return Html.fromHtml(content);
     }
 
     @Override
@@ -87,11 +90,15 @@ public final class Response implements AsResults {
     }
 
     public JSONObject asJsonObject() throws JSONException {
-        return new JSONObject(asString());
+        final String content = asString();
+        if (content == null) throw new JSONException("No content was returned in this response.");
+        return new JSONObject(content);
     }
 
     public JSONArray asJsonArray() throws JSONException {
-        return new JSONArray(asString());
+        final String content = asString();
+        if (content == null) throw new JSONException("No content was returned in this response.");
+        return new JSONArray(content);
     }
 
     public void asFile(File destination) throws IOException {
