@@ -470,9 +470,9 @@ You can set a host that is used as the base URL for every request.
 Bridge.config().host("http://www.google.com");
 ```
 
-With Google's homepage set as the host, this code would request `http://www.google.com/search?q=Hello`:
+With Google's homepage set as the host, the code below would request `http://www.google.com/search?q=Hello`:
 
-```
+```java
 Bridge.client()
         .get("/search?q=%s", "Hello")
         .asString();
