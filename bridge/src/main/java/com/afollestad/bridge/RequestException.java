@@ -5,8 +5,8 @@ package com.afollestad.bridge;
  */
 public final class RequestException extends Exception {
 
-    protected RequestException(Exception wrap) {
-        super(wrap);
+    protected RequestException(Request request, Exception wrap) {
+        super(String.format("%s %s error: %s", request.method().name(), request.url(), wrap.getMessage()), wrap);
     }
 
     protected RequestException(Request cancelledRequest) {

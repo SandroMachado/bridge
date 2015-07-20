@@ -100,7 +100,7 @@ public final class Request {
         } catch (Exception e) {
             if (e instanceof RequestException)
                 throw (RequestException) e;
-            throw new RequestException(e);
+            throw new RequestException(this, e);
         }
         return this;
     }

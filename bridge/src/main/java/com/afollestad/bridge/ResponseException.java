@@ -10,7 +10,7 @@ public class ResponseException extends Exception {
     private Response mResponse;
 
     protected ResponseException(@NonNull Response response) {
-        super(response.code() + " " + response.phrase());
+        super(response.toString());
         mResponse = response;
     }
 
