@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 
 /**
  * @author Aidan Follestad (afollestad)
@@ -41,7 +42,7 @@ public final class Response implements AsResults {
     }
 
     public boolean isSuccess() {
-        return mCode == 200;
+        return mCode == HttpURLConnection.HTTP_OK;
     }
 
     public Response throwIfNotSuccess() throws ResponseException {

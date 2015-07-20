@@ -30,12 +30,12 @@ public final class RequestBuilder implements AsResultsExceptions {
 
     protected RequestBuilder(String url, Method method, Bridge context) {
         mContext = context;
-        if (!url.startsWith("http") && context.mHost != null)
-            url = context.mHost + url;
+        if (!url.startsWith("http") && Bridge.config().mHost != null)
+            url = Bridge.config().mHost + url;
         Log.d(this, "%s %s", method.name(), url);
         mUrl = url;
         mMethod = method;
-        mHeaders = context.mDefaultHeaders;
+        mHeaders = Bridge.config().mDefaultHeaders;
     }
 
     public RequestBuilder header(@NonNull String name, @NonNull Object value) {

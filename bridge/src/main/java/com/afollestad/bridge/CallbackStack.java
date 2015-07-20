@@ -10,7 +10,7 @@ final class CallbackStack {
 
     public static String createKey(Request req) {
         return String.format("%s:%s:%s", req.method().name(), req.url(),
-                req.builder().mBody != null ? req.builder().mBody.length + "" : "null");
+                req.builder().mBody != null ? req.builder().mBody.length + "" : "");
     }
 
     private final Object LOCK = new Object();

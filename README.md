@@ -42,7 +42,8 @@ dependencies {
 5. [Request Cancellation](https://github.com/afollestad/bridge#request-cancellation)
     1. [Cancelling Individual Requests](https://github.com/afollestad/bridge#cancelling-individual-requests)
     2. [Cancelling Multiple Requests](https://github.com/afollestad/bridge#cancelling-multiple-requests)
-6. [Cleanup](https://github.com/afollestad/bridge#cleanup)
+6. [Configuration](https://github.com/afollestad/bridge#configuration)
+7. [Cleanup](https://github.com/afollestad/bridge#cleanup)
 
 ------
 
@@ -146,7 +147,6 @@ Bitmap responseImage = response.asBitmap();
 
 // Save the response content to a File of your choosing
 response.asFile(new File("/sdcard/Download.extension"));
-
 ```
 
 ------
@@ -169,14 +169,8 @@ try {
 }
 ```
 
-If there are headers you want to automatically include in every request, without explicitly adding them again,
-you can add default headers to the Bridge client:
-
-```java
-Bridge.client()
-    .defaultHeader("User-Agent", "BridgeSampleProject")
-    .defaultHeader("CustomHeader", "Hello");
-```
+**Default headers**: see the [Configuration](https://github.com/afollestad/bridge#configuration) section
+for info on how to set default headers that are automatically included in every request.
 
 ------
 
@@ -458,6 +452,60 @@ Bridge.client()
 
 **Note**: cancellation can only be done on async requests. The library does not keep track of
 blocking sync requests.
+
+------
+
+# Configuration
+
+Bridge allows you configure various functions globally.
+
+### Host
+
+You can set a host that is used as the base URL for every request.
+
+```java
+Bridge.config().host("http://www.google.com");
+```
+
+With Google's homepage set as the host, this code would request *http://www.google.com/search?q=Hello*:
+
+```
+Bridge.client()
+        .get("/search?q=%s", "Hello")
+        .asString();
+```
+
+Basically, the URL you pass with each request is appended to the end of the host. If you were to pass a full
+URL (beginning with *HTTP*) in `get()` above, it would skip using the host for just that request.
+
+### Default Headers
+
+Default headers are headers that are automatically applied to every request. You don't have to do it
+yourself with every request in your app.
+
+```java
+Bridge.config()
+    .defaultHeader("User-Agent", "Bridge Sample Code")
+    .defaultHeader("Content-Type", "application/json")
+    .defaultHeader("Via", "My App");
+```
+
+Every request, regardless of the method, will include those headers. You can override them at the
+individual request level by setting the header as you normally would.
+
+### Buffer Size
+
+The default buffer size is *1024 * 4* (4096). Basically, when you download a webpage or file, the
+buffer size is how big the byte array is with each pass. A large buffer size will create a larger
+byte array, which can affect memory usage, but it also increases the pace in which the content is downloaded.
+
+The buffer size can easily be configured:
+
+```java
+Bridge.config().bufferSize(1024 * 10);
+```
+
+Just remember to be careful with how much memory you consume, and test on various devices.
 
 ------
 

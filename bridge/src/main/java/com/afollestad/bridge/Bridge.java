@@ -15,11 +15,11 @@ import java.util.Map;
 public class Bridge {
 
     private static Bridge mBridge;
+    private static Config mConfig;
+
     protected static final Object LOCK = new Object();
 
     protected Handler mHandler;
-    protected String mHost;
-    protected Map<String, Object> mDefaultHeaders;
     private Map<String, CallbackStack> mRequestMap;
 
     protected boolean pushCallback(Request request, Callback callback) {
@@ -74,27 +74,21 @@ public class Bridge {
     }
 
     private Bridge() {
-        mDefaultHeaders = new HashMap<>();
-        mDefaultHeaders.put("User-Agent", "afollestad/Bridge");
-        mDefaultHeaders.put("Content-Type", "text/plain");
+        mConfig = new Config();
     }
 
+    @NonNull
     public static Bridge client() {
         if (mBridge == null)
             mBridge = new Bridge();
         return mBridge;
     }
 
-    public Bridge host(@Nullable String host) {
-        mHost = host;
-        return this;
-    }
-
-    public Bridge defaultHeader(@NonNull String name, @Nullable Object value) {
-        if (value == null)
-            mDefaultHeaders.remove(name);
-        else mDefaultHeaders.put(name, value);
-        return this;
+    @NonNull
+    public static Config config() {
+        if (mConfig == null)
+            mConfig = new Config();
+        return mConfig;
     }
 
     private String processUrl(String url, @Nullable Object... formatArgs) {
@@ -129,7 +123,7 @@ public class Bridge {
         return new RequestBuilder(processUrl(url, formatArgs), Method.DELETE, this);
     }
 
-    public void cancelAll(final Method method, final String url) {
+    public void cancelAll(@NonNull final Method method, @NonNull final String url) {
         if (mRequestMap == null) return;
         new Thread(new Runnable() {
             @Override
@@ -164,11 +158,9 @@ public class Bridge {
 
     public void destroy() {
         mHandler = null;
-        mHost = null;
-        mDefaultHeaders.clear();
-        mDefaultHeaders = null;
+        mConfig.destroy();
         cancelAll();
-        Log.d(this, "Bridge singleton was destoryed.");
+        Log.d(this, "Bridge singleton was destroyed.");
     }
 
     public static void cleanup() {

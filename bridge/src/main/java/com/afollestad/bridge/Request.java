@@ -1,6 +1,7 @@
 package com.afollestad.bridge;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -40,10 +41,10 @@ public final class Request {
                     }
                 }
                 conn.setDoInput(true);
-                conn.setDoOutput(mBuilder.mMethod == Method.POST || mBuilder.mMethod == Method.PUT);
 
                 checkCancelled();
                 if (mBuilder.mPipe != null || mBuilder.mBody != null) {
+                    conn.setDoOutput(true);
                     OutputStream os = null;
                     try {
                         os = conn.getOutputStream();
@@ -65,7 +66,7 @@ public final class Request {
                 try {
                     is = conn.getInputStream();
                     bos = new ByteArrayOutputStream();
-                    byte[] buf = new byte[2048];
+                    byte[] buf = new byte[Bridge.config().BUFFER_SIZE];
                     int read;
                     int totalRead = 0;
                     int totalAvailable;
@@ -91,6 +92,8 @@ public final class Request {
 
                 checkCancelled();
                 mResponse = new Response(data, conn.getResponseCode(), conn.getResponseMessage());
+            } catch (FileNotFoundException fnf) {
+                mResponse = new Response(null, conn.getResponseCode(), conn.getResponseMessage());
             } finally {
                 conn.disconnect();
             }
