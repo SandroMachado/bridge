@@ -89,16 +89,26 @@ public final class Response implements AsResults {
         return mBitmapCache;
     }
 
-    public JSONObject asJsonObject() throws JSONException {
+    public JSONObject asJsonObject() throws ResponseException {
         final String content = asString();
-        if (content == null) throw new JSONException("No content was returned in this response.");
-        return new JSONObject(content);
+        if (content == null)
+            throw new ResponseException("No content was returned in this response.");
+        try {
+            return new JSONObject(content);
+        } catch (JSONException e) {
+            throw new ResponseException(this, e);
+        }
     }
 
-    public JSONArray asJsonArray() throws JSONException {
+    public JSONArray asJsonArray() throws ResponseException {
         final String content = asString();
-        if (content == null) throw new JSONException("No content was returned in this response.");
-        return new JSONArray(content);
+        if (content == null)
+            throw new ResponseException("No content was returned in this response.");
+        try {
+            return new JSONArray(content);
+        } catch (JSONException e) {
+            throw new ResponseException(this, e);
+        }
     }
 
     public void asFile(File destination) throws IOException {

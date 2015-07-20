@@ -23,9 +23,9 @@ interface AsResults {
 
     Bitmap asBitmap();
 
-    JSONObject asJsonObject() throws JSONException;
+    JSONObject asJsonObject() throws ResponseException;
 
-    JSONArray asJsonArray() throws JSONException;
+    JSONArray asJsonArray() throws ResponseException;
 
     void asFile(File destination) throws IOException;
 }
