@@ -125,35 +125,25 @@ public class Bridge {
 
     public void cancelAll(@NonNull final Method method, @NonNull final String url) {
         if (mRequestMap == null) return;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (LOCK) {
-                    for (String key : mRequestMap.keySet()) {
-                        if (!key.startsWith(method.name() + ":" + url + ":")) continue;
-                        mRequestMap.get(key).cancelAll();
-                        mRequestMap.remove(key);
-                    }
-                    mRequestMap = null;
-                }
+        synchronized (LOCK) {
+            for (String key : mRequestMap.keySet()) {
+                if (!key.startsWith(method.name() + ":" + url + ":")) continue;
+                mRequestMap.get(key).cancelAll();
+                mRequestMap.remove(key);
             }
-        }).start();
+            mRequestMap = null;
+        }
     }
 
     public void cancelAll() {
         if (mRequestMap == null) return;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (LOCK) {
-                    for (String key : mRequestMap.keySet()) {
-                        mRequestMap.get(key).cancelAll();
-                        mRequestMap.remove(key);
-                    }
-                    mRequestMap = null;
-                }
+        synchronized (LOCK) {
+            for (String key : mRequestMap.keySet()) {
+                mRequestMap.get(key).cancelAll();
+                mRequestMap.remove(key);
             }
-        }).start();
+            mRequestMap = null;
+        }
     }
 
     public void destroy() {
