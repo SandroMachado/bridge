@@ -310,7 +310,8 @@ Pipe transferPipe = Pipe.forStream(is, "text/plain");
 
 `forUri(Context, Uri)` will read from a File URI or content URI, so basically any file on an Android device can
 be read. `forFile(File)` indirectly uses `forUri(Context, Uri)` specifically for file:// URIs.
-`forStream(InputStream, String)` reads an `InputStream` and transfers the content into the Pipe.
+`forStream(InputStream, String)` reads an `InputStream` and transfers the content into the Pipe,
+you need to specify a Content-Type value in the second parameter.
 
 ------
 
@@ -436,6 +437,7 @@ Request request = Bridge.client()
             }
         }
     });
+
 request.cancel();
 ```
 
@@ -513,7 +515,7 @@ Bridge.client().config()
     .readTimeout(15000);
 ```
 
-You can set timeouts for individual requests too:
+You can set timeouts on the request level too:
 
 ```java
 Bridge.client()
@@ -538,7 +540,7 @@ Bridge.client().config()
 
 Just remember to be careful with how much memory you consume, and test on various devices.
 
-You can set the buffer size for individual requests too:
+You can set the buffer size on the request level too:
 
 ```java
 Bridge.client()
