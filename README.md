@@ -28,8 +28,8 @@ dependencies {
 1. [Basics](https://github.com/afollestad/bridge#basics)
     1. [Request API](https://github.com/afollestad/bridge#request-api)
     2. [URL Format Args](https://github.com/afollestad/bridge#url-format-args)
-    3. [Response Conversion](https://github.com/afollestad/bridge#response-conversion)
-    4. [Response Headers](https://github.com/afollestad/bridge#response-headers)
+    3. [Response Headers](https://github.com/afollestad/bridge#response-headers)
+    4. [Response Body](https://github.com/afollestad/bridge#response-conversion)
 2. [Request Headers](https://github.com/afollestad/bridge#request-headers)
 3. [Request Bodies](https://github.com/afollestad/bridge#request-bodies)
     1. [Basics](https://github.com/afollestad/bridge#basics-1)
@@ -126,7 +126,32 @@ This is using Java's `String.format()` method behind the scenes. The `searchQuer
 `%s` in your URL. You can have multiple format args, and they don't all have to be strings (e.g. `%d` for any number variable).
 Args that are strings will be automatically URL encoded for you.
 
-### Response Conversion
+### Response Headers
+
+Retrieving response headers is simple:
+
+```java
+Response response = // ...
+String contentType = response.header("Content-Type");
+```
+
+Headers can also have multiple values, separated by commas:
+
+```java
+Response response = // ...
+List<String> values = response.headerList("header-name");
+```
+
+Since *Content-Type* and *Content-Length* are commonly used response headers, there's convenience methods
+to get these values:
+
+```java
+Response response = // ...
+String contentType = response.contentType();
+int contentLength = response.contentLength();
+```
+
+### Response Body
 
 The above examples all use `asString()` to save response content as a `String`. There are many other
 formats that responses can be converted/saved to:
@@ -152,31 +177,6 @@ Bitmap responseImage = response.asBitmap();
 
 // Save the response content to a File of your choosing
 response.asFile(new File("/sdcard/Download.extension"));
-```
-
-### Response Headers
-
-Retrieving response headers is simple:
-
-```java
-Response response = // ...
-String contentType = response.header("Content-Type");
-```
-
-Headers can also have multiple values, separated by commas:
-
-```java
-Response response = // ...
-List<String> values = response.headerList("header-name");
-```
-
-Since *Content-Type* and *Content-Length* are commonly used response headers, there's convenience methods
-to get these values:
-
-```java
-Response response = // ...
-String contentType = response.contentType();
-int contentLength = response.contentLength();
 ```
 
 ------
