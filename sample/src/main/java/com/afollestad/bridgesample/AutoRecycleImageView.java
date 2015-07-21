@@ -2,8 +2,15 @@ package com.afollestad.bridgesample;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.afollestad.bridge.Bridge;
+import com.afollestad.bridge.Callback;
+import com.afollestad.bridge.Request;
+import com.afollestad.bridge.RequestException;
+import com.afollestad.bridge.Response;
 
 /**
  * Recycles its Bitmap when detached from the window (Activity)
@@ -30,6 +37,19 @@ public class AutoRecycleImageView extends ImageView {
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
         mBitmap = bm;
+    }
+
+    @Override
+    public void setImageURI(Uri uri) {
+        Bridge.client()
+                .get(uri.toString())
+                .request(new Callback() {
+                    @Override
+                    public void response(Request request, Response response, RequestException e) {
+                        if (response != null)
+                            setImageBitmap(response.asBitmap());
+                    }
+                });
     }
 
     @Override
