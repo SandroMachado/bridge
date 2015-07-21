@@ -126,26 +126,36 @@ public class Bridge {
 
     public void cancelAll(@NonNull final Method method, @NonNull final String url) {
         if (mRequestMap == null) return;
-        synchronized (LOCK) {
-            final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
-            while (iter.hasNext()) {
-                final Map.Entry<String, CallbackStack> entry = iter.next();
-                if (!entry.getKey().startsWith(method.name() + ":" + url + ":")) continue;
-                mRequestMap.get(entry.getKey()).cancelAll();
-                iter.remove();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (LOCK) {
+                    final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        final Map.Entry<String, CallbackStack> entry = iter.next();
+                        if (!entry.getKey().startsWith(method.name() + ":" + url + ":")) continue;
+                        mRequestMap.get(entry.getKey()).cancelAll();
+                        iter.remove();
+                    }
+                    mRequestMap = null;
+                }
             }
-            mRequestMap = null;
-        }
+        }).start();
     }
 
     public void cancelAll() {
         if (mRequestMap == null) return;
-        synchronized (LOCK) {
-            for (String key : mRequestMap.keySet())
-                mRequestMap.get(key).cancelAll();
-            mRequestMap.clear();
-            mRequestMap = null;
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (LOCK) {
+                    for (String key : mRequestMap.keySet())
+                        mRequestMap.get(key).cancelAll();
+                    mRequestMap.clear();
+                    mRequestMap = null;
+                }
+            }
+        }).start();
     }
 
     public void destroy() {
