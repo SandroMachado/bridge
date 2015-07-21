@@ -519,10 +519,10 @@ You can set timeouts on the request level too:
 
 ```java
 Bridge.client()
-    .get("/bigVideo.mp4")
+    .get("http://someurl.com/bigVideo.mp4")
     .connectTimeout(10000)
     .readTimeout(15000)
-    .asString();
+    .asFile(new File("/sdcard/Download/bigVideo.mp4"));
 ```
 
 ### Buffer Size
@@ -544,9 +544,9 @@ You can set the buffer size on the request level too:
 
 ```java
 Bridge.client()
-    .get("/bigVideo.mp4")
+    .get("http://someurl.com/bigVideo.mp4")
     .bufferSize(1024 * 10)
-    .asString();
+    .asFile(new File("/sdcard/Download/bigVideo.mp4"));
 ```
 
 **Note**: the buffer size is used in a few other places, such as pre-built `Pipe`'s (`Pipe#forUri`, `Pipe#forStream`, etc.).
