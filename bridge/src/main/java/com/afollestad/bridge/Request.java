@@ -2,6 +2,7 @@ package com.afollestad.bridge;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -92,8 +93,16 @@ public final class Request {
 
                 checkCancelled();
                 mResponse = new Response(data, url(), conn);
-            } catch (FileNotFoundException fnf) {
-                mResponse = new Response(null, url(), conn);
+            } catch (Exception fnf) {
+                InputStream es = null;
+                try {
+                    es = conn.getErrorStream();
+                    mResponse = new Response(Util.readEntireStream(es), url(), conn);
+                } catch(IOException e3) {
+                    mResponse = new Response(null, url(), conn);
+                } finally {
+                    Util.closeQuietly(es);
+                }
             } finally {
                 conn.disconnect();
             }
