@@ -515,7 +515,7 @@ Bridge.client().config()
     .readTimeout(15000);
 ```
 
-You can set timeouts on the request level too:
+You can set timeouts at the request level too:
 
 ```java
 Bridge.client()
@@ -540,7 +540,7 @@ Bridge.client().config()
 
 Just remember to be careful with how much memory you consume, and test on various devices.
 
-You can set the buffer size on the request level too:
+You can set the buffer size at the request level too:
 
 ```java
 Bridge.client()
