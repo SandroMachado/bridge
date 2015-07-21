@@ -97,7 +97,7 @@ public final class Request {
                 InputStream es = null;
                 try {
                     es = conn.getErrorStream();
-                    mResponse = new Response(Util.readEntireStream(es), url(), conn);
+                    mResponse = new Response(es != null ? Util.readEntireStream(es) : null, url(), conn);
                 } catch(IOException e3) {
                     mResponse = new Response(null, url(), conn);
                 } finally {
