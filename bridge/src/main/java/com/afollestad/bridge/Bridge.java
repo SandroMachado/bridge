@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -126,10 +127,12 @@ public class Bridge {
     public void cancelAll(@NonNull final Method method, @NonNull final String url) {
         if (mRequestMap == null) return;
         synchronized (LOCK) {
-            for (String key : mRequestMap.keySet()) {
-                if (!key.startsWith(method.name() + ":" + url + ":")) continue;
-                mRequestMap.get(key).cancelAll();
-                mRequestMap.remove(key);
+            final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
+            while (iter.hasNext()) {
+                final Map.Entry<String, CallbackStack> entry = iter.next();
+                if (!entry.getKey().startsWith(method.name() + ":" + url + ":")) continue;
+                mRequestMap.get(entry.getKey()).cancelAll();
+                iter.remove();
             }
             mRequestMap = null;
         }
@@ -138,10 +141,9 @@ public class Bridge {
     public void cancelAll() {
         if (mRequestMap == null) return;
         synchronized (LOCK) {
-            for (String key : mRequestMap.keySet()) {
+            for (String key : mRequestMap.keySet())
                 mRequestMap.get(key).cancelAll();
-                mRequestMap.remove(key);
-            }
+            mRequestMap.clear();
             mRequestMap = null;
         }
     }
