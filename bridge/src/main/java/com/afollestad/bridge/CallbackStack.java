@@ -56,11 +56,12 @@ final class CallbackStack {
         if (mCallbacks == null)
             throw new IllegalStateException("This stack has already been fired.");
         int newPercent = (int) (((float) current / (float) total) * 100f);
-        if (newPercent != mPercent)
+        if (newPercent != mPercent) {
             mPercent = newPercent;
-        synchronized (LOCK) {
-            for (Callback cb : mCallbacks)
-                cb.progress(request, current, total, mPercent);
+            synchronized (LOCK) {
+                for (Callback cb : mCallbacks)
+                    cb.progress(request, current, total, mPercent);
+            }
         }
     }
 

@@ -91,9 +91,9 @@ public final class Request {
                 }
 
                 checkCancelled();
-                mResponse = new Response(data, url(), conn.getResponseCode(), conn.getResponseMessage());
+                mResponse = new Response(data, url(), conn);
             } catch (FileNotFoundException fnf) {
-                mResponse = new Response(null, url(), conn.getResponseCode(), conn.getResponseMessage());
+                mResponse = new Response(null, url(), conn);
             } finally {
                 conn.disconnect();
             }

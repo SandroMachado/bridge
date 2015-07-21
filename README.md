@@ -29,6 +29,7 @@ dependencies {
     1. [Request API](https://github.com/afollestad/bridge#request-api)
     2. [URL Format Args](https://github.com/afollestad/bridge#url-format-args)
     3. [Response Conversion](https://github.com/afollestad/bridge#response-conversion)
+    4. [Response Headers](https://github.com/afollestad/bridge#response-headers)
 2. [Request Headers](https://github.com/afollestad/bridge#request-headers)
 3. [Request Bodies](https://github.com/afollestad/bridge#request-bodies)
     1. [Basics](https://github.com/afollestad/bridge#basics-1)
@@ -151,6 +152,31 @@ Bitmap responseImage = response.asBitmap();
 
 // Save the response content to a File of your choosing
 response.asFile(new File("/sdcard/Download.extension"));
+```
+
+### Response Headers
+
+Retrieving response headers is simple:
+
+```java
+Response response = // ...
+String contentType = response.header("Content-Type");
+```
+
+Headers can also have multiple values, separated by commas:
+
+```java
+Response response = // ...
+List<String> values = response.headerList("header-name");
+```
+
+Since *Content-Type* and *Content-Length* are commonly used response headers, there's convenience methods
+to get these values:
+
+```java
+Response response = // ...
+String contentType = response.contentType();
+int contentLength = response.contentLength();
 ```
 
 ------

@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Aidan Follestad (afollestad)
@@ -27,12 +29,14 @@ public final class Response implements AsResults {
     private final int mCode;
     private final String mMessage;
     private Bitmap mBitmapCache;
+    private Map<String, List<String>> mHeaders;
 
-    protected Response(byte[] data, String url, int code, String message) throws IOException {
+    protected Response(byte[] data, String url, HttpURLConnection conn) throws IOException {
         mData = data;
         mUrl = url;
-        mCode = code;
-        mMessage = message;
+        mCode = conn.getResponseCode();
+        mMessage = conn.getResponseMessage();
+        mHeaders = conn.getHeaderFields();
     }
 
     public String url() {
@@ -45,6 +49,24 @@ public final class Response implements AsResults {
 
     public String phrase() {
         return mMessage;
+    }
+
+    public String header(String name) {
+        return mHeaders.get(name).get(0);
+    }
+
+    public List<String> headerList(String name) {
+        return mHeaders.get(name);
+    }
+
+    public int contentLength() {
+        String contentLength = header("Content-Length");
+        if (contentLength == null) return -1;
+        return Integer.parseInt(contentLength);
+    }
+
+    public String contentType() {
+        return header("Content-Type");
     }
 
     public boolean isSuccess() {
