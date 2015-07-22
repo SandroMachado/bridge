@@ -493,7 +493,7 @@ If you want to match a URL without using a regular expression, you can use `Patt
 
 ```java
 Bridge.client()
-    .cancelAll(Method.GET, Pattern.quote("http://www.someurl.com/image/png"));
+    .cancelAll(Method.GET, Pattern.quote("http://www.someurl.com/image.png"));
 ```
 
 You can pass `null` for the first parameter to match all methods.
