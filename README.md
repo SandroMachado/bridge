@@ -52,6 +52,7 @@ dependencies {
     2. [Default Headers](https://github.com/afollestad/bridge#default-headers)
     3. [Timeouts](https://github.com/afollestad/bridge#timeouts)
     4. [Buffer Size](https://github.com/afollestad/bridge#buffer-size)
+    5. [Buffer Size](https://github.com/afollestad/bridge#logging)
 7. [Cleanup](https://github.com/afollestad/bridge#cleanup)
 
 ------
@@ -660,6 +661,15 @@ Bridge.client()
 ```
 
 **Note**: the buffer size is used in a few other places, such as pre-built `Pipe`'s (`Pipe#forUri`, `Pipe#forStream`, etc.).
+
+### Logging
+
+By default, logging is disabled. You can enable logging to see what the library is doing in your Logcat:
+
+```java
+Bridge.client().config()
+    .logging(true);
+```
 
 ------
 

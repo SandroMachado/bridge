@@ -22,9 +22,15 @@ public final class Config {
     protected int mConnectTimeout = 10000;
     protected int mReadTimeout = 15000;
     protected int mBufferSize = 1024 * 4;
+    protected boolean mLogging = false;
 
     public Config host(@Nullable String host) {
         mHost = host;
+        return this;
+    }
+
+    public Config logging(boolean enabled) {
+        mLogging = enabled;
         return this;
     }
 
