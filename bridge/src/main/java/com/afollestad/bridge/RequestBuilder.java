@@ -28,6 +28,7 @@ public final class RequestBuilder implements AsResultsExceptions {
     protected int mBufferSize;
     private Request mRequest;
     protected boolean mCancellable = true;
+    protected Object mTag;
 
     protected RequestBuilder(String url, Method method, Bridge context) {
         mContext = context;
@@ -147,6 +148,11 @@ public final class RequestBuilder implements AsResultsExceptions {
 
     public RequestBuilder cancellable(boolean cancelable) {
         mCancellable = cancelable;
+        return this;
+    }
+
+    public RequestBuilder tag(@Nullable Object tag) {
+        mTag = tag;
         return this;
     }
 

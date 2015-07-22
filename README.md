@@ -43,6 +43,9 @@ dependencies {
 5. [Request Cancellation](https://github.com/afollestad/bridge#request-cancellation)
     1. [Cancelling Individual Requests](https://github.com/afollestad/bridge#cancelling-individual-requests)
     2. [Cancelling Multiple Requests](https://github.com/afollestad/bridge#cancelling-multiple-requests)
+        1. [All Active](https://github.com/afollestad/bridge#all-active)
+        1. [Method, URL/Regex](https://github.com/afollestad/bridge#method-url-regex)
+        2. [Tags](https://github.com/afollestad/bridge#tags)
     3. [Preventing Cancellation](https://github.com/afollestad/bridge#preventing-cancellation)
 6. [Configuration](https://github.com/afollestad/bridge#configuration)
     1. [Host](https://github.com/afollestad/bridge#host)
@@ -473,33 +476,72 @@ and `RequestException#isCancelled()` will return true.
 
 ### Cancelling Multiple Requests
 
-You can cancel all active requests:
+The `Bridge` singleton allows you to cancel managed **async** requests.
+
+#### All Active
+
+This code will cancel all active requests, regardless of method or URL:
 
 ```java
 Bridge.client()
     .cancelAll();
 ```
 
-Or even requests to specific URLs using a regular expression pattern:
+#### Method, URL/Regex
 
-```java
-// This will cancel all GET requests to any URL starting with http:// and ending with .png
-// .* is a wildcard in regular expressions, \\ escapes the period to make it literal.
-Bridge.client()
-    .cancelAll(Method.GET, "http://.*\\.png");;
-```
+The `cancelAll(Method, String)` allows you to cancel all active requests that match an HTTP method
+*and* a URL or regular expression pattern.
 
-If you want to match a URL without using a regular expression, you can use `Pattern.quote(String)`:
+This will cancel all GET requests to any URL starting with http:// and ending with `.png`:
 
 ```java
 Bridge.client()
-    .cancelAll(Method.GET, Pattern.quote("http://www.someurl.com/image.png"));
+    .cancelAll(Method.GET, "http://.*\\.png");
 ```
 
-You can pass `null` for the first parameter to match all methods.
+`.*` is a wildcard in regular expressions, \\ escapes the period to make it literal.
 
-**Note**: cancellation can only be done on async requests. The library does not keep track of
-blocking sync requests.
+If you want to cancel all requests to a specific URL, you can use `Pattern.quote()` to specify a regex
+that matches literal text:
+
+```java
+Bridge.client()
+    .cancelAll(Method.GET, Pattern.quote("http://www.android.com/media/android_vector.jpg"));
+```
+
+**Note**: if you pass `null` for the first parameter (`Method`), it will ignore the HTTP method when
+looking for requests to cancel. In other words, you could cancel `GET`, `POST`, `PUT`, *and* `DELETE`
+requests to a specific URL.
+
+#### Tags
+
+When making a request, you can tag it with a value:
+
+```java
+Bridge.client()
+    .get("http://www.google.com")
+    .tag("Hello!")
+    .request(new Callback() {
+        @Override
+        public void response(Request request, Response response, RequestException e) {
+            if (e.isCancelled()) {
+                // Request was cancelled
+            } else {
+                // Error occurred
+            }
+        }
+    });
+```
+
+By "a value", I mean literally any type of Object. It could be a `String`, `int`, `boolean`, etc.
+
+You can cancel all requests marked with a specific tag value:
+
+```java
+// Add a second parameter with a value of true to cancel un-cancellable requests
+Bridge.client()
+    .cancelAll("Hello!");
+```
 
 ### Preventing Cancellation
 

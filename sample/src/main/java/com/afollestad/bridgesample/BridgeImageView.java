@@ -31,9 +31,11 @@ public class BridgeImageView extends ImageView {
     }
 
     private boolean mCancelable = true;
+    private Object mTag;
 
-    public void setImageURI(Uri uri, boolean cancelable) {
+    public void setImageURI(Uri uri, boolean cancelable, Object tag) {
         mCancelable = cancelable;
+        mTag = tag;
         setImageURI(uri);
     }
 
@@ -42,6 +44,7 @@ public class BridgeImageView extends ImageView {
         Bridge.client()
                 .get(uri.toString())
                 .cancellable(mCancelable)
+                .tag(mTag)
                 .request(new Callback() {
                     @Override
                     public void response(Request request, Response response, RequestException e) {

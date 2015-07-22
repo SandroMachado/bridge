@@ -23,7 +23,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
         viewHolder.image.setImageURI(Uri.parse(
-                "http://assets.toptal.io/uploads/blog/category/logo/10/android.png"));
+                        "http://assets.toptal.io/uploads/blog/category/logo/10/android.png"));
     }
 
     @Override

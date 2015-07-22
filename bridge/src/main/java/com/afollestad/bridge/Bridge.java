@@ -145,8 +145,31 @@ public class Bridge {
                             continue;
                         else if (!pattern.matcher(keyUrl).find())
                             continue;
-                        mRequestMap.get(entry.getKey()).cancelAll(force);
+                        mRequestMap.get(entry.getKey()).cancelAll(null, force);
                         iter.remove();
+                    }
+                    if (mRequestMap.size() == 0)
+                        mRequestMap = null;
+                }
+            }
+        }).start();
+    }
+
+    public void cancelAll(final Object tag) {
+        cancelAll(tag, false);
+    }
+
+    public void cancelAll(final Object tag, final boolean force) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (LOCK) {
+                    if (mRequestMap == null) return;
+                    final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        final Map.Entry<String, CallbackStack> entry = iter.next();
+                        if (entry.getValue().cancelAll(tag, force))
+                            iter.remove();
                     }
                     if (mRequestMap.size() == 0)
                         mRequestMap = null;
@@ -168,7 +191,7 @@ public class Bridge {
                     final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
                     while (iter.hasNext()) {
                         final Map.Entry<String, CallbackStack> entry = iter.next();
-                        if (entry.getValue().cancelAll(force))
+                        if (entry.getValue().cancelAll(null, force))
                             iter.remove();
                     }
                     if (mRequestMap.size() == 0)

@@ -39,6 +39,7 @@ final class CallbackStack {
             if (mCallbacks == null)
                 throw new IllegalStateException("This stack has already been fired or cancelled.");
             callback.isCancellable = request.isCancellable();
+            callback.mTag = request.builder().mTag;
             mCallbacks.add(callback);
             if (mDriverRequest == null)
                 mDriverRequest = request;
@@ -57,7 +58,6 @@ final class CallbackStack {
                     }
                 });
             }
-            mDriverRequest = null;
             mCallbacks.clear();
             mCallbacks = null;
         }
@@ -84,13 +84,15 @@ final class CallbackStack {
         }
     }
 
-    public boolean cancelAll(boolean force) {
+    public boolean cancelAll(Object tag, boolean force) {
         synchronized (LOCK) {
             if (mCallbacks == null)
                 throw new IllegalStateException("This stack has already been cancelled.");
             final Iterator<Callback> callIter = mCallbacks.iterator();
             while (callIter.hasNext()) {
                 final Callback callback = callIter.next();
+                if (tag != null && !tag.equals(callback.mTag))
+                    continue;
                 if (callback.isCancellable || force) {
                     callIter.remove();
                     mHandler.post(new Runnable() {
