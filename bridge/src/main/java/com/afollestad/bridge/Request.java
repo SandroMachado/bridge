@@ -1,7 +1,6 @@
 package com.afollestad.bridge;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -99,7 +98,7 @@ public final class Request {
                 try {
                     es = conn.getErrorStream();
                     mResponse = new Response(Util.readEntireStream(es), url(), conn);
-                } catch(IOException e3) {
+                } catch (IOException e3) {
                     mResponse = new Response(null, url(), conn);
                 } finally {
                     Util.closeQuietly(es);
@@ -123,7 +122,17 @@ public final class Request {
         }
     }
 
+    public boolean isCancelable() {
+        return builder().mCancelable;
+    }
+
     public void cancel() {
+        cancel(false);
+    }
+
+    public void cancel(boolean force) {
+        if (!force && !isCancelable())
+            throw new IllegalStateException("This request is not cancelable.");
         isCancelled = true;
     }
 

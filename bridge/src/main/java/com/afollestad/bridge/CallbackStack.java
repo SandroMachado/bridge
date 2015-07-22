@@ -83,21 +83,23 @@ final class CallbackStack {
         }
     }
 
-    public void cancelAll() {
+    public void cancelAll(boolean force) {
         synchronized (LOCK) {
             if (mCallbacks == null)
                 throw new IllegalStateException("This stack has already been cancelled.");
             int index = 0;
             for (final Request req : mRequests) {
-                req.mCancelCallbackFired = true;
-                req.cancel();
-                final Callback fCallback = mCallbacks.get(index);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        fCallback.response(req, null, new RequestException(req));
-                    }
-                });
+                if (req.isCancelable() || force) {
+                    req.cancel(force);
+                    final Callback fCallback = mCallbacks.get(index);
+                    req.mCancelCallbackFired = true;
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            fCallback.response(req, null, new RequestException(req));
+                        }
+                    });
+                }
                 index++;
             }
             mCallbacks.clear();

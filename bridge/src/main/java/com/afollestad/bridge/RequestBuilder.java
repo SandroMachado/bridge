@@ -27,6 +27,7 @@ public final class RequestBuilder implements AsResultsExceptions {
     protected int mReadTimeout;
     protected int mBufferSize;
     private Request mRequest;
+    protected boolean mCancelable = true;
 
     protected RequestBuilder(String url, Method method, Bridge context) {
         mContext = context;
@@ -142,6 +143,11 @@ public final class RequestBuilder implements AsResultsExceptions {
 
     public RequestBuilder body(@NonNull File file) {
         return body(Pipe.forFile(file));
+    }
+
+    public RequestBuilder cancelable(boolean cancelable) {
+        mCancelable = cancelable;
+        return this;
     }
 
     public Request request() throws RequestException {

@@ -124,6 +124,10 @@ public class Bridge {
     }
 
     public void cancelAll(@Nullable final Method method, @NonNull final String urlRegex) {
+        cancelAll(method, urlRegex, false);
+    }
+
+    public void cancelAll(@Nullable final Method method, @NonNull final String urlRegex, final boolean force) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -141,7 +145,7 @@ public class Bridge {
                             continue;
                         else if (!pattern.matcher(keyUrl).find())
                             continue;
-                        mRequestMap.get(entry.getKey()).cancelAll();
+                        mRequestMap.get(entry.getKey()).cancelAll(force);
                         iter.remove();
                     }
                     if (mRequestMap.size() == 0)
@@ -152,13 +156,17 @@ public class Bridge {
     }
 
     public void cancelAll() {
+        cancelAll(false);
+    }
+
+    public void cancelAll(final boolean force) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (LOCK) {
                     if (mRequestMap == null) return;
                     for (String key : mRequestMap.keySet())
-                        mRequestMap.get(key).cancelAll();
+                        mRequestMap.get(key).cancelAll(force);
                     mRequestMap.clear();
                     mRequestMap = null;
                 }

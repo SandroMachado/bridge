@@ -43,6 +43,7 @@ dependencies {
 5. [Request Cancellation](https://github.com/afollestad/bridge#request-cancellation)
     1. [Cancelling Individual Requests](https://github.com/afollestad/bridge#cancelling-individual-requests)
     2. [Cancelling Multiple Requests](https://github.com/afollestad/bridge#cancelling-multiple-requests)
+    3. [Preventing Cancellation](https://github.com/afollestad/bridge#preventing-cancellation)
 6. [Configuration](https://github.com/afollestad/bridge#configuration)
     1. [Host](https://github.com/afollestad/bridge#host)
     2. [Default Headers](https://github.com/afollestad/bridge#default-headers)
@@ -499,6 +500,35 @@ You can pass `null` for the first parameter to match all methods.
 
 **Note**: cancellation can only be done on async requests. The library does not keep track of
 blocking sync requests.
+
+### Preventing Cancellation
+
+There are certain situations in which you wouldn't want to allow a request to be cancelled. For an example,
+your app may make calls to `Bridge.client().cancelAll()` when an `Activity` pauses; that way, all requests
+that were active in that screen are cancelled. However, there may be a `Service` in your app that's making requests
+in the background that you would want to maintain. You can make those requests non-cancellable:
+
+```java
+Bridge.client()
+    .get("http://www.google.com")
+    .cancelable(false)
+    .request(new Callback() {
+        @Override
+        public void response(Request request, Response response, RequestException e) {
+            if (e != null || !response.isSuccess()) {
+                // Error occurred
+            } else {
+                // Use the Response
+            }
+        }
+    });
+```
+
+If you tried to make a call to `cancel()` on this `Request`, an `IllegalStateException` would be thrown.
+If you really want to cancel an un-cancellable request, you can force it to be cancelled with `cancel(true)`.
+
+Un-cancellable requests will be ignored by `Bridge.cancelAll()` and the other variants of that method,
+unless you pass `true` for the `force` parameter.
 
 ------
 
