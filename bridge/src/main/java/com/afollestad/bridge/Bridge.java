@@ -123,7 +123,7 @@ public class Bridge {
         return new RequestBuilder(processUrl(url, formatArgs), Method.DELETE, this);
     }
 
-    public void cancelAll(@NonNull final Method method, @NonNull final String urlRegex) {
+    public void cancelAll(@Nullable final Method method, @NonNull final String urlRegex) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,7 +137,7 @@ public class Bridge {
                         final String keyMethod = splitKey[0];
                         final String keyUrl = splitKey[1];
 
-                        if (!keyMethod.equals(method.name()))
+                        if (method != null && !keyMethod.equals(method.name()))
                             continue;
                         else if (!pattern.matcher(keyUrl).find())
                             continue;

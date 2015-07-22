@@ -495,6 +495,8 @@ Bridge.client()
     .cancelAll(Method.GET, Pattern.quote("http://www.someurl.com/image/png"));
 ```
 
+You can pass `null` for the first parameter to match all methods.
+
 **Note**: cancellation can only be done on async requests. The library does not keep track of
 blocking sync requests.
 
