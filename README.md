@@ -499,7 +499,7 @@ Bridge.client()
     .cancelAll(Method.GET, "http://.*\\.png");
 ```
 
-`.*` is a wildcard in regular expressions, \\\\ escapes the period to make it literal.
+`.*` is a wildcard in regular expressions, `\\` escapes the period to make it literal.
 
 If you want to cancel all requests to a specific URL, you can use `Pattern.quote()` to specify a regex
 that matches literal text:
