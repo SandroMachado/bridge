@@ -1,6 +1,5 @@
 package com.afollestad.bridge;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -9,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author Aidan Follestad (afollestad)
@@ -20,7 +20,6 @@ public class Bridge {
 
     protected static final Object LOCK = new Object();
 
-    protected Handler mHandler;
     private Map<String, CallbackStack> mRequestMap;
 
     protected boolean pushCallback(Request request, Callback callback) {
@@ -124,31 +123,40 @@ public class Bridge {
         return new RequestBuilder(processUrl(url, formatArgs), Method.DELETE, this);
     }
 
-    public void cancelAll(@NonNull final Method method, @NonNull final String url) {
-        if (mRequestMap == null) return;
+    public void cancelAll(@NonNull final Method method, @NonNull final String urlRegex) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (LOCK) {
+                    if (mRequestMap == null) return;
+                    final Pattern pattern = Pattern.compile(urlRegex);
                     final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
                     while (iter.hasNext()) {
                         final Map.Entry<String, CallbackStack> entry = iter.next();
-                        if (!entry.getKey().startsWith(method.name() + ":" + url + ":")) continue;
+                        final String[] splitKey = entry.getKey().split("\0");
+                        final String keyMethod = splitKey[0];
+                        final String keyUrl = splitKey[1];
+
+                        if (!keyMethod.equals(method.name()))
+                            continue;
+                        else if (!pattern.matcher(keyUrl).find())
+                            continue;
                         mRequestMap.get(entry.getKey()).cancelAll();
                         iter.remove();
                     }
-                    mRequestMap = null;
+                    if (mRequestMap.size() == 0)
+                        mRequestMap = null;
                 }
             }
         }).start();
     }
 
     public void cancelAll() {
-        if (mRequestMap == null) return;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (LOCK) {
+                    if (mRequestMap == null) return;
                     for (String key : mRequestMap.keySet())
                         mRequestMap.get(key).cancelAll();
                     mRequestMap.clear();
@@ -159,7 +167,6 @@ public class Bridge {
     }
 
     public void destroy() {
-        mHandler = null;
         mConfig.destroy();
         mConfig = null;
         cancelAll();

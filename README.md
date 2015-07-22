@@ -17,7 +17,7 @@ Then, add Bridge to your dependencies list:
 
 ```gradle
 dependencies {
-    compile 'com.afollestad:bridge:1.1.3'
+    compile 'com.afollestad:bridge:1.2.0'
 }
 ```
 
@@ -479,11 +479,20 @@ Bridge.client()
     .cancelAll();
 ```
 
-Or even requests to specific URLs:
+Or even requests to specific URLs using a regular expression pattern:
+
+```java
+// This will cancel all GET requests to any URL starting with http:// and ending with .png
+// .* is a wildcard in regular expressions, \\ escapes the period to make it literal.
+Bridge.client()
+    .cancelAll(Method.GET, "http://.*\\.png");;
+```
+
+If you want to match a URL without using a regular expression, you can use `Pattern.quote(String)`:
 
 ```java
 Bridge.client()
-    .cancelAll(Method.GET, "http://www.google.com");
+    .cancelAll(Method.GET, Pattern.quote("http://www.someurl.com/image/png"));
 ```
 
 **Note**: cancellation can only be done on async requests. The library does not keep track of

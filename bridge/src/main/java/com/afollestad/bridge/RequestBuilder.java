@@ -1,7 +1,6 @@
 package com.afollestad.bridge;
 
 import android.graphics.Bitmap;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Spanned;
@@ -150,8 +149,6 @@ public final class RequestBuilder implements AsResultsExceptions {
     }
 
     public Request request(Callback callback) {
-        if (mContext.mHandler == null)
-            mContext.mHandler = new Handler();
         mRequest = new Request(this);
         if (mContext.pushCallback(mRequest, callback)) {
             new Thread(new Runnable() {
@@ -159,22 +156,11 @@ public final class RequestBuilder implements AsResultsExceptions {
                 public void run() {
                     try {
                         mRequest.makeRequest();
-                        if (mContext.mHandler == null) return;
-                        mContext.mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mContext.fireCallbacks(mRequest, mRequest.response(), null);
-                            }
-                        });
+                        if (mRequest.mCancelCallbackFired) return;
+                        mContext.fireCallbacks(mRequest, mRequest.response(), null);
                     } catch (final RequestException e) {
-                        if (mContext.mHandler == null)
-                            return;
-                        mContext.mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mContext.fireCallbacks(mRequest, null, e);
-                            }
-                        });
+                        if (mRequest.mCancelCallbackFired) return;
+                        mContext.fireCallbacks(mRequest, null, e);
                     }
                 }
             }).start();

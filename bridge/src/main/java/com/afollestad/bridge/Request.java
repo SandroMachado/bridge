@@ -15,6 +15,7 @@ public final class Request {
 
     private final RequestBuilder mBuilder;
     private boolean isCancelled;
+    protected boolean mCancelCallbackFired;
     private Response mResponse;
 
     protected Request(RequestBuilder builder) {
@@ -97,7 +98,7 @@ public final class Request {
                 InputStream es = null;
                 try {
                     es = conn.getErrorStream();
-                    mResponse = new Response(es != null ? Util.readEntireStream(es) : null, url(), conn);
+                    mResponse = new Response(Util.readEntireStream(es), url(), conn);
                 } catch(IOException e3) {
                     mResponse = new Response(null, url(), conn);
                 } finally {

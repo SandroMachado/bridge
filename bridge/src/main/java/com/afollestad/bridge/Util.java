@@ -1,6 +1,5 @@
 package com.afollestad.bridge;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -22,7 +21,8 @@ public class Util {
         }
     }
 
-    public static byte[] readEntireStream(@NonNull InputStream is) throws IOException {
+    public static byte[] readEntireStream(@Nullable InputStream is) throws IOException {
+        if (is == null) return null;
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();
