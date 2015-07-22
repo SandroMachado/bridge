@@ -29,7 +29,7 @@ dependencies {
     1. [Request API](https://github.com/afollestad/bridge#request-api)
     2. [URL Format Args](https://github.com/afollestad/bridge#url-format-args)
     3. [Response Headers](https://github.com/afollestad/bridge#response-headers)
-    4. [Response Body](https://github.com/afollestad/bridge#response-conversion)
+    4. [Response Bodies](https://github.com/afollestad/bridge#response-bodies)
 2. [Request Headers](https://github.com/afollestad/bridge#request-headers)
 3. [Request Bodies](https://github.com/afollestad/bridge#request-bodies)
     1. [Basics](https://github.com/afollestad/bridge#basics-1)
@@ -151,7 +151,7 @@ String contentType = response.contentType();
 int contentLength = response.contentLength();
 ```
 
-### Response Body
+### Response Bodies
 
 The above examples all use `asString()` to save response content as a `String`. There are many other
 formats that responses can be converted/saved to:
