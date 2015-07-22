@@ -44,7 +44,7 @@ dependencies {
     1. [Cancelling Individual Requests](https://github.com/afollestad/bridge#cancelling-individual-requests)
     2. [Cancelling Multiple Requests](https://github.com/afollestad/bridge#cancelling-multiple-requests)
         1. [All Active](https://github.com/afollestad/bridge#all-active)
-        1. [Method, URL/Regex](https://github.com/afollestad/bridge#method-url-regex)
+        1. [Method, URL/Regex](https://github.com/afollestad/bridge#method-urlregex)
         2. [Tags](https://github.com/afollestad/bridge#tags)
     3. [Preventing Cancellation](https://github.com/afollestad/bridge#preventing-cancellation)
 6. [Configuration](https://github.com/afollestad/bridge#configuration)
