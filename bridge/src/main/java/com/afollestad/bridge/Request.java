@@ -122,8 +122,8 @@ public final class Request {
         }
     }
 
-    public boolean isCancelable() {
-        return builder().mCancelable;
+    public boolean isCancellable() {
+        return builder().mCancellable;
     }
 
     public void cancel() {
@@ -131,13 +131,9 @@ public final class Request {
     }
 
     public void cancel(boolean force) {
-        if (!force && !isCancelable())
-            throw new IllegalStateException("This request is not cancelable.");
+        if (!force && !isCancellable())
+            throw new IllegalStateException("This request is not cancellable.");
         isCancelled = true;
-    }
-
-    public boolean isCancelled() {
-        return isCancelled;
     }
 
     public Response response() {
@@ -156,8 +152,6 @@ public final class Request {
     public String toString() {
         if (mResponse != null)
             return String.format("[%s]: %s %s", mResponse.toString(), method().name(), url());
-        else if (isCancelled())
-            return String.format("[CANCELLED] %s %s", method().name(), url());
         return String.format("%s %s", method().name(), url());
     }
 }

@@ -33,11 +33,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        final AutoRecycleImageView image;
+        final BridgeImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            image = (AutoRecycleImageView) itemView.findViewById(R.id.image);
+            image = (BridgeImageView) itemView.findViewById(R.id.image);
         }
     }
 }

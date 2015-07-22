@@ -1,7 +1,6 @@
 package com.afollestad.bridgesample;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -17,32 +16,32 @@ import com.afollestad.bridge.Response;
  *
  * @author Aidan Follestad (afollestad)
  */
-public class AutoRecycleImageView extends ImageView {
+public class BridgeImageView extends ImageView {
 
-    public AutoRecycleImageView(Context context) {
+    public BridgeImageView(Context context) {
         super(context);
     }
 
-    public AutoRecycleImageView(Context context, AttributeSet attrs) {
+    public BridgeImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AutoRecycleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BridgeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    private Bitmap mBitmap;
+    private boolean mCancelable = true;
 
-    @Override
-    public void setImageBitmap(Bitmap bm) {
-        super.setImageBitmap(bm);
-        mBitmap = bm;
+    public void setImageURI(Uri uri, boolean cancelable) {
+        mCancelable = cancelable;
+        setImageURI(uri);
     }
 
     @Override
     public void setImageURI(Uri uri) {
         Bridge.client()
                 .get(uri.toString())
+                .cancellable(mCancelable)
                 .request(new Callback() {
                     @Override
                     public void response(Request request, Response response, RequestException e) {
@@ -50,14 +49,5 @@ public class AutoRecycleImageView extends ImageView {
                             setImageBitmap(response.asBitmap());
                     }
                 });
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mBitmap != null && !mBitmap.isRecycled()) {
-            mBitmap.recycle();
-            mBitmap = null;
-        }
     }
 }

@@ -5,6 +5,8 @@ package com.afollestad.bridge;
  */
 public abstract class Callback {
 
+    protected boolean isCancellable;
+
     public abstract void response(Request request, Response response, RequestException e);
 
     public void progress(Request request, int current, int total, int percent) {

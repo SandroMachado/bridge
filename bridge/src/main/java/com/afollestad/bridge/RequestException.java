@@ -5,6 +5,8 @@ package com.afollestad.bridge;
  */
 public final class RequestException extends Exception {
 
+    private boolean isCancelled;
+
     protected RequestException(Request request, Exception wrap) {
         super(String.format("%s %s error: %s", request.method().name(), request.url(), wrap.getMessage()), wrap);
     }
@@ -12,5 +14,10 @@ public final class RequestException extends Exception {
     protected RequestException(Request cancelledRequest) {
         super(String.format("%s request to %s was cancelled.",
                 cancelledRequest.method().name(), cancelledRequest.url()));
+        isCancelled = true;
+    }
+
+    public boolean isCancelled() {
+        return isCancelled;
     }
 }

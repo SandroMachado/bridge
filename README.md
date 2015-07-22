@@ -454,7 +454,7 @@ Request request = Bridge.client()
         @Override
         public void response(Request request, Response response, RequestException e) {
             if (e != null || !response.isSuccess()) {
-                if (request.isCancelled()) {
+                if (e.isCancelled()) {
                     // Request was cancelled
                 } else {
                     // Error occurred
@@ -469,7 +469,7 @@ request.cancel();
 ```
 
 When a request is cancelled, the `RequestException` will *not* be null (it will say the request was cancelled),
-and `Request#isCancelled()` will return true.
+and `RequestException#isCancelled()` will return true.
 
 ### Cancelling Multiple Requests
 
@@ -511,7 +511,7 @@ in the background that you would want to maintain. You can make those requests n
 ```java
 Bridge.client()
     .get("http://www.google.com")
-    .cancelable(false)
+    .cancellable(false)
     .request(new Callback() {
         @Override
         public void response(Request request, Response response, RequestException e) {
@@ -525,7 +525,8 @@ Bridge.client()
 ```
 
 If you tried to make a call to `cancel()` on this `Request`, an `IllegalStateException` would be thrown.
-If you really want to cancel an un-cancellable request, you can force it to be cancelled with `cancel(true)`.
+If you really want to cancel an un-cancellable request (`Request.isCancellable()` returns true), you
+can force it to be cancelled with `cancel(true)`.
 
 Un-cancellable requests will be ignored by `Bridge.cancelAll()` and the other variants of that method,
 unless you pass `true` for the `force` parameter.

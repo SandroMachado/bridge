@@ -63,7 +63,7 @@ public class Bridge {
             final CallbackStack cbs = mRequestMap.get(key);
             if (cbs != null) {
                 Log.d(this, "Firing %d callback(s) for %s", cbs.size(), key);
-                cbs.fireAll(request, response, error);
+                cbs.fireAll(response, error);
                 mRequestMap.remove(key);
                 if (mRequestMap.size() == 0)
                     mRequestMap = null;
@@ -165,10 +165,14 @@ public class Bridge {
             public void run() {
                 synchronized (LOCK) {
                     if (mRequestMap == null) return;
-                    for (String key : mRequestMap.keySet())
-                        mRequestMap.get(key).cancelAll(force);
-                    mRequestMap.clear();
-                    mRequestMap = null;
+                    final Iterator<Map.Entry<String, CallbackStack>> iter = mRequestMap.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        final Map.Entry<String, CallbackStack> entry = iter.next();
+                        if (entry.getValue().cancelAll(force))
+                            iter.remove();
+                    }
+                    if (mRequestMap.size() == 0)
+                        mRequestMap = null;
                 }
             }
         }).start();
