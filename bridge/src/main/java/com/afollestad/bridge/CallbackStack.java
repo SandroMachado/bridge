@@ -104,7 +104,6 @@ final class CallbackStack {
             if (mCallbacks.size() == 0) {
                 mDriverRequest.mCancelCallbackFired = true;
                 mDriverRequest.cancel(force);
-                mDriverRequest = null;
                 mCallbacks = null;
                 return true;
             } else {
