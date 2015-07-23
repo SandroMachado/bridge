@@ -52,7 +52,7 @@ dependencies {
     2. [Default Headers](https://github.com/afollestad/bridge#default-headers)
     3. [Timeouts](https://github.com/afollestad/bridge#timeouts)
     4. [Buffer Size](https://github.com/afollestad/bridge#buffer-size)
-    5. [Buffer Size](https://github.com/afollestad/bridge#logging)
+    5. [Logging](https://github.com/afollestad/bridge#logging)
 7. [Cleanup](https://github.com/afollestad/bridge#cleanup)
 
 ------
