@@ -479,7 +479,7 @@ and `RequestException#isCancelled()` will return true.
 
 The `Bridge` singleton allows you to cancel managed **async** requests.
 
-##### All Active
+###### All Active
 
 This code will cancel all active requests, regardless of method or URL:
 
@@ -488,7 +488,7 @@ Bridge.client()
     .cancelAll();
 ```
 
-##### Method, URL/Regex
+###### Method, URL/Regex
 
 The `cancelAll(Method, String)` allows you to cancel all active requests that match an HTTP method
 *and* a URL or regular expression pattern.
@@ -514,7 +514,7 @@ Bridge.client()
 looking for requests to cancel. In other words, you could cancel `GET`, `POST`, `PUT`, *and* `DELETE`
 requests to a specific URL.
 
-##### Tags
+###### Tags
 
 When making a request, you can tag it with a value:
 
