@@ -70,7 +70,7 @@ public final class Response implements AsResults {
     }
 
     public boolean isSuccess() {
-        return mCode == HttpURLConnection.HTTP_OK;
+        return mCode >= 200 && mCode < 300;
     }
 
     public Response throwIfNotSuccess() throws ResponseException {
